@@ -1,0 +1,14 @@
+# Diretórios de Build (Gerados pelo compilador)
+cmake-build-*/
+build/
+out/
+bin/
+
+# Arquivos da IDE CLion
+.idea/
+
+# Arquivos compilados do Windows/C :3
+*.o
+*.exe
+*.dll
+*.log
