@@ -10,4 +10,7 @@ typedef struct {
     char *title;
 } Manga;
 
+Manga* creat_manga(const char* id, const char* title);
+void destruct_manga(Manga* m);
+
 #endif //ITWOMA_MANGA_H

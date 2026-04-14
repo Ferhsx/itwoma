@@ -4,4 +4,5 @@ project(itwoma C)
 set(CMAKE_C_STANDARD 11)
 
 add_executable(itwoma src/main.c
-        include/manga.h)
+        include/manga.h
+        src/manga.c)
