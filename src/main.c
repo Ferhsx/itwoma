@@ -1,16 +1,22 @@
 #include <stdio.h>
 #include "../include/manga.h"
+#include "../include/http_client.h"
+
 
 int main() {
     printf("=== ITWOMA (I'm Tired Of Web Manga Ads) ===\n\n");
 
-    Manga *meu_manga = creat_manga("d1a15d2b-f838...", "Vagabond");
+    const char *url = "https://api.mangadex.org/manga?title=Vagabond&limit=1";
 
-    printf("Manga carregado dinamicamente:\n");
-    printf("Titulo: %s\n", meu_manga->title);
+    MemoryBuffer resposta_api = install_data_url(url);
 
-    destruct_manga(meu_manga);
+    if(resposta_api.memory != NULL){
+        printf("\n--- Inicio dos dados ---\n");
+        printf("%s\n", resposta_api.memory);
+        printf("--- Fim dos dados ---\n\n");
+    }
 
+    clear_buffer(&resposta_api);
     printf("\nMemoria limpa com sucesso. Encerrando...\n");
     return 0;
 }
