@@ -8,6 +8,8 @@ find_package(CURL REQUIRED)
 add_executable(itwoma src/main.c
         include/manga.h
         src/manga.c
-        src/http_client.c)
+        src/http_client.c
+        lib/cJSON/cJSON.c
+        )
 
 target_link_libraries(itwoma PRIVATE CURL::libcurl)
