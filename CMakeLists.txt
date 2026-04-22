@@ -9,6 +9,7 @@ add_executable(itwoma src/main.c
         include/manga.h
         src/manga.c
         src/http_client.c
+        src/parser.c
         lib/cJSON/cJSON.c
         )
 
