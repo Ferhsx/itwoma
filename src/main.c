@@ -1,59 +1,56 @@
 #include <stdio.h>
-#include <string.h> 
 #include "../include/manga.h"
 #include "../include/http_client.h"
 #include "../include/parser.h"
 
-void prepare_text_url(char *texto) {
-    texto[strcspn(texto, "\n")] = 0;
-
-    for(int i = 0; texto[i] != '\0'; i++) {
-        if(texto[i] == ' ') {
-            texto[i] = '+';
-        }
-    }
-}
-
 int main() {
-    //os printf foi feito por ia pq preguiça de formatar a saída, mas é só pra dar um charme mesmo, entao acho q n tem problema
-    printf("===========================================\n");
-    printf("   ITWOMA (I'm Tired Of Web Manga Ads)     \n");
-    printf("===========================================\n\n");
+    printf("=== ITWOMA (I'm Tired Of Web Manga Ads) ===\n\n");
 
-    char busca_usuario[100];
-
-    printf("Digite o nome do manga que deseja buscar: ");
+    const char *url_manga = "https://api.mangadex.org/manga?title=Berserk&limit=1";
     
-    if (fgets(busca_usuario, sizeof(busca_usuario), stdin) != NULL) {
+    // --- 1. BUSCA O MANGÁ ---
+    MemoryBuffer res_manga = install_data_url(url_manga);
+    if (res_manga.memory == NULL) return 1;
+
+    Manga *manga = parse_manga_json(res_manga.memory);
+    clear_buffer(&res_manga); // Já podemos limpar o balde
+
+    if (manga != NULL) {
+        printf("\n>> Manga Encontrado: %s\n", manga->title);
         
-        prepare_text_url(busca_usuario);
-
-        char url_dinamica[256];
+        // --- 2. BUSCA OS CAPÍTULOS DESSE MANGÁ ---
+        // Cria um texto com 256 espaços para montar a URL
+        char url_capitulos[256]; 
         
-        snprintf(url_dinamica, sizeof(url_dinamica), 
-                 "https://api.mangadex.org/manga?title=%s&limit=1", busca_usuario);
+        // Monta a URL passando o manga->id. Limitamos a 5 capítulos, idioma Inglês, em ordem crescente.
+        snprintf(url_capitulos, sizeof(url_capitulos), 
+            "https://api.mangadex.org/manga/%s/feed?translatedLanguage[]=en&limit=5&order[chapter]=asc", 
+            manga->id);
 
-        printf("\nBuscando na internet: %s\n", url_dinamica);
-
-        MemoryBuffer resposta_api = install_data_url(url_dinamica);
-
-        if (resposta_api.memory != NULL) {
-            Manga *manga_encontrado = parse_manga_json(resposta_api.memory);
+        printf("\nBuscando capitulos em: %s\n", url_capitulos);
+        MemoryBuffer res_caps = install_data_url(url_capitulos);
+        
+        if (res_caps.memory != NULL) {
+            ChapterList lista = parse_chapters_json(res_caps.memory);
             
-            if (manga_encontrado != NULL) {
-                printf("\n--- RESULTADO DA BUSCA ---\n");
-                printf("Titulo: %s\n", manga_encontrado->title);
-                printf("ID Hash: %s\n", manga_encontrado->id);
-                printf("--------------------------\n");
-                
-                destruct_manga(manga_encontrado);
-            } else {
-                printf("\nOps! Nenhum manga encontrado com esse nome.\n");
+            printf("\n--- LISTA DE CAPITULOS ---\n");
+            for (int i = 0; i < lista.count; i++) {
+                printf("[Capitulo %s] %s \n   ID: %s\n", 
+                    lista.chapters[i]->chapter_number, 
+                    lista.chapters[i]->title,
+                    lista.chapters[i]->id);
             }
-            clear_buffer(&resposta_api);
-        }
-    }
+            printf("--------------------------\n");
 
-    printf("\nEncerrando o programa.\n");
+            // Faxina da Lista
+            destruct_chapter_list(&lista);
+        }
+        clear_buffer(&res_caps);
+        
+        // Faxina do Manga
+        destruct_manga(manga);
+    }
+    
+    printf("\nMemoria limpa. Encerrando programa.\n");
     return 0;
 }
