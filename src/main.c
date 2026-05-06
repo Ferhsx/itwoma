@@ -28,21 +28,44 @@ int main() {
             manga->id);
 
         printf("\nBuscando capitulos em: %s\n", url_capitulos);
+
         MemoryBuffer res_caps = install_data_url(url_capitulos);
         
         if (res_caps.memory != NULL) {
             ChapterList lista = parse_chapters_json(res_caps.memory);
-            
-            printf("\n--- LISTA DE CAPITULOS ---\n");
-            for (int i = 0; i < lista.count; i++) {
-                printf("[Capitulo %s] %s \n   ID: %s\n", 
-                    lista.chapters[i]->chapter_number, 
-                    lista.chapters[i]->title,
-                    lista.chapters[i]->id);
-            }
-            printf("--------------------------\n");
 
-            // Faxina da Lista
+            if(lista.count > 0){
+                Chapter *primeiro_capitulo = lista.chapters[0];
+                printf("\n>> Capitulo Encontrado: %s - %s\n", primeiro_capitulo->chapter_number, primeiro_capitulo->title);
+
+                char url_paginas[256];
+                snprintf(url_paginas, sizeof(url_paginas), "https://api.mangadex.org/at-home/server/%s", primeiro_capitulo->id);
+
+                printf("Conectando no MangaDex@Home...\n");
+                MemoryBuffer res_pages = install_data_url(url_paginas);
+
+                if(res_pages.memory != NULL){
+                    PageList paginas = parse_pagelist_json(res_pages.memory);
+
+                    if(paginas.page_count > 0){
+                        printf("\n[Servidor alocado] Base URL: %s\n", paginas.base_url);
+                        printf("Paginas disponiveis: %d\n", paginas.page_count);
+
+                        int limite_print = (paginas.page_count < 5) ? paginas.page_count : 5; // Limita a impressão a 5 páginas
+
+                        for(int i = 0; i < limite_print; i++){
+                            printf("Link Pagina %d: %s/data/%s/%s\n", 
+                                i+1, 
+                                paginas.base_url, 
+                                paginas.chapter_hash, 
+                                paginas.page_filenames[i]);
+                        }
+                        printf("... (e mais %d paginas)\n", paginas.page_count - limite_print);
+                    }
+                    destruct_page_list(&paginas);
+                }
+                clear_buffer(&res_pages);
+            }
             destruct_chapter_list(&lista);
         }
         clear_buffer(&res_caps);

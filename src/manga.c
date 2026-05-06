@@ -62,3 +62,32 @@ void destruct_chapter_list(ChapterList *lista) {
         lista->count = 0;
     }
 }
+
+PageList creat_pagelist(int count){
+    PageList p;
+    p.page_count = count;
+    p.base_url = NULL;
+    p.chapter_hash = NULL;
+
+    p.page_filenames = (char**) malloc(count * sizeof(char*));
+    for (int i = 0; i < count; i++) {
+        p.page_filenames[i] = NULL;
+    }
+    return p;
+}
+
+void destruct_page_list(PageList *lista) {
+    if (lista->base_url) free(lista->base_url);
+    if (lista->chapter_hash) free(lista->chapter_hash);
+    
+    if (lista->page_filenames) {
+        for(int i = 0; i < lista->page_count; i++) {
+            if (lista->page_filenames[i]) {
+                free(lista->page_filenames[i]);
+            }
+        }
+        free(lista->page_filenames);
+    }
+    
+    lista->page_count = 0;
+}

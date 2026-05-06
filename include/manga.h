@@ -5,6 +5,13 @@
 #ifndef ITWOMA_MANGA_H
 #define ITWOMA_MANGA_H
 
+typedef struct {
+    char *base_url;
+    char *chapter_hash;
+    char **page_filenames;
+    int page_count;
+} PageList;
+
 typedef struct{
     char *id;
     char *chapter_number;
@@ -26,5 +33,8 @@ void destruct_chapter_list(ChapterList* lista);
 
 Manga* creat_manga(const char* id, const char* title);
 void destruct_manga(Manga* m);
+
+PageList creat_pagelist(int count);
+void destruct_page_list(PageList* lista);
 
 #endif //ITWOMA_MANGA_H

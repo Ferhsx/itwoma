@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "../include/parser.h"
 #include "../lib/cJSON/cJSON.h"
 
@@ -71,6 +72,48 @@ ChapterList parse_chapters_json(const char *json_string) {
 
         // Cria o capítulo e guarda no nosso array
         lista.chapters[i] = creat_chapter(id_str, cap_num_str, titulo_str);
+    }
+
+    cJSON_Delete(json_root);
+    return lista;
+}
+
+PageList parse_pagelist_json(const char *json_string) {
+    PageList lista = creat_pagelist(0);
+
+    cJSON *json_root = cJSON_Parse(json_string);
+    if (json_root == NULL) return lista;
+
+    cJSON *base_url_node = cJSON_GetObjectItemCaseSensitive(json_root, "baseUrl");
+
+    cJSON *chapter_node = cJSON_GetObjectItemCaseSensitive(json_root, "chapter");
+    if (chapter_node == NULL) {
+        cJSON_Delete(json_root);
+        return lista;
+    }
+
+    cJSON *hash_node = cJSON_GetObjectItemCaseSensitive(chapter_node, "hash");
+    cJSON *data_array = cJSON_GetObjectItemCaseSensitive(chapter_node, "data");
+
+    if(cJSON_IsArray(data_array) && cJSON_IsString(base_url_node) && cJSON_IsString(hash_node)){
+        int page_count = cJSON_GetArraySize(data_array);
+        lista = creat_pagelist(page_count);
+
+        lista.base_url = (char*) malloc(strlen(base_url_node->valuestring) + 1);
+        strcpy(lista.base_url, base_url_node->valuestring);
+
+        lista.chapter_hash = (char*) malloc(strlen(hash_node->valuestring) + 1);
+        strcpy(lista.chapter_hash, hash_node->valuestring);
+
+        for(int i = 0; i<page_count; i++){
+            cJSON *page_item = cJSON_GetArrayItem(data_array, i);
+            if (cJSON_IsString(page_item)) {
+                lista.page_filenames[i] = (char*) malloc(strlen(page_item->valuestring) + 1);
+                strcpy(lista.page_filenames[i], page_item->valuestring);
+            } else {
+                lista.page_filenames[i] = NULL;
+            }
+        }
     }
 
     cJSON_Delete(json_root);
