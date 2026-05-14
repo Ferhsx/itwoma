@@ -63,3 +63,42 @@ void clear_buffer(MemoryBuffer *buffer) {
         buffer->size = 0;
     }
 }
+
+static size_t WriteFileCallback(void *ptr, size_t size, size_t nmemb, void *stream) {
+    // 'stream' é o nosso arquivo aberto. Usamos a função nativa fwrite do C.
+    size_t written = fwrite(ptr, size, nmemb, (FILE *)stream);
+    return written;
+}
+
+int install_files(const char *url, const char *caminho_destino) {
+    CURL *curl_handle = curl_easy_init();
+    if (!curl_handle) return 0;
+
+    // Tenta abrir o arquivo no HD no modo "wb" (Write Binary - Escrita de Binários)
+    FILE *arquivo = fopen(caminho_destino, "wb");
+    if (!arquivo) {
+        printf("Erro: Nao consegui criar o arquivo %s no disco.\n", caminho_destino);
+        curl_easy_cleanup(curl_handle);
+        return 0;
+    }
+
+    curl_easy_setopt(curl_handle, CURLOPT_URL, url);
+    curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteFileCallback);
+    // Diz pro libcurl jogar a água dentro do nosso arquivo, e não na RAM
+    curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, arquivo);
+    curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "itwoma-terminal-reader/1.0");
+
+    // Manda abrir a torneira!
+    CURLcode res = curl_easy_perform(curl_handle);
+
+    // Fecha a "tampa" do arquivo no HD e limpa a memória
+    fclose(arquivo);
+    curl_easy_cleanup(curl_handle);
+
+    if (res != CURLE_OK) {
+        fprintf(stderr, "Erro ao baixar imagem: %s\n", curl_easy_strerror(res));
+        return 0;
+    }
+
+    return 1; // Sucesso!
+}

@@ -11,6 +11,8 @@ typedef struct {
 
 MemoryBuffer install_data_url(const char *url);
 
+int install_files(const char *url, const char *caminho_destino);
+
 void clear_buffer(MemoryBuffer *buffer);
 
 #endif
