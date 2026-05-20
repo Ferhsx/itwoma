@@ -58,4 +58,4 @@ Release\itwoma.exe
 
 ---
 
-📖 Para guia completo, veja [README.md](README.md)
+📖 Para guia completo, veja [README.md](../README.md)

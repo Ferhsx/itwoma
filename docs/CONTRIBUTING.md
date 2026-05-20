@@ -4,7 +4,7 @@ Obrigado por considerar contribuir ao ITWOMA! Este guia ajudará você a entende
 
 ## 📋 Antes de Começar
 
-- Leia o [README.md](README.md) para entender o projeto
+- Leia o [README.md](../README.md) para entender o projeto
 - Verifique as [Issues](https://github.com/Ferhsx/itwoma/issues) para não duplicar trabalho
 - Faça um fork do repositório
 

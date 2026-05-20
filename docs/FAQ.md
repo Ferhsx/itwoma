@@ -144,13 +144,13 @@ R: Sim! Veja [CONTRIBUTING.md](CONTRIBUTING.md) e [PROJECT_ANALYSIS.md](PROJECT_
 R: Veja [CONTRIBUTING.md](CONTRIBUTING.md) para guia completo.
 
 ### P: Posso modificar para uso pessoal?
-R: Sim, o código está sob licença MIT. Veja [LICENSE](LICENSE).
+R: Sim, o código está sob licença MIT. Veja [LICENSE](../LICENSE).
 
 ### P: Como funciona internamente?
 R: Veja [DEVELOPMENT.md](DEVELOPMENT.md) para documentação técnica.
 
 ### P: Qual é a estrutura do projeto?
-R: Veja [README.md](README.md) seção "Estrutura do Projeto".
+R: Veja [README.md](../README.md) seção "Estrutura do Projeto".
 
 ### P: Quantas linhas tem?
 R: ~500 linhas de código fonte (sem comentários).
@@ -225,7 +225,7 @@ R: Veja [CONTRIBUTING.md](CONTRIBUTING.md)!
 ## 📚 Outros Recursos
 
 ### Documentação Relacionada
-- [README.md](README.md) - Guia principal
+- [README.md](../README.md) - Guia principal
 - [QUICKSTART.md](QUICKSTART.md) - Começar rápido
 - [DEVELOPMENT.md](DEVELOPMENT.md) - Guia técnico
 - [CONTRIBUTING.md](CONTRIBUTING.md) - Como contribuir

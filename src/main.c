@@ -61,7 +61,7 @@ int main() {
         MemoryBuffer res_manga = install_data_url(url_manga);
         if (res_manga.memory == NULL) return 1;
 
-        Manga *manga = parse_manga_json(res_manga.memory);
+        Manga *manga = parse_manga_json (res_manga.memory);
         clear_buffer(&res_manga);
 
         if (manga != NULL) {

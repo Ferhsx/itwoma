@@ -153,7 +153,7 @@ DESENVOLVEDOR
 ## 🎯 Guia de Uso Por Perfil
 
 ### 👤 "Quero usar o programa"
-1. Leia [README.md](README.md) - Seção "Como Usar"
+1. Leia [README.md](../README.md) - Seção "Como Usar"
 2. Se problema: [QUICKSTART.md](QUICKSTART.md) → [FAQ.md](FAQ.md)
 
 ### 👨‍💻 "Quero entender o código"

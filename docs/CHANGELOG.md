@@ -80,6 +80,6 @@ Seguimos [Semantic Versioning](https://semver.org/):
 ## Links
 
 - 🌐 [GitHub](https://github.com/Ferhsx/itwoma)
-- 📖 [Documentação](./README.md)
+- 📖 [Documentação](../README.md)
 - 🐛 [Issues](https://github.com/Ferhsx/itwoma/issues)
 - 💬 [Discussions](https://github.com/Ferhsx/itwoma/discussions)
