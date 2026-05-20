@@ -4,8 +4,31 @@
 #include "../include/parser.h"
 #include "../include/utils.h"
 #include <stdlib.h>
+#include <string.h>
 
 int main() {
+    printf("=== ITWOMA (I'm Tired Of Web Manga Ads) ===\n\n");
+
+    // --- CONFIGURAÇÃO INICIAL DE IDIOMA ---
+    char lang_code[10] = "en"; // Inglês é o padrão de fallback (segurança)
+
+    printf("Escolha o idioma de preferencia para os capitulos:\n");
+    printf("[1] Portugues (pt-br)\n");
+    printf("[2] Ingles (en)\n");
+    printf("Opcao: ");
+
+    char escolha_lang_str[10];
+    if (fgets(escolha_lang_str, sizeof(escolha_lang_str), stdin) != NULL) {
+        if (escolha_lang_str[0] == '1') {
+            strcpy(lang_code, "pt-br");
+        } else if (escolha_lang_str[0] == '2') {
+            strcpy(lang_code, "en");
+        } else {
+            printf("Opcao invalida. Usando Ingles (en) como padrao.\n");
+        }
+    }
+    printf("Idioma configurado para: %s\n", lang_code);
+
     while(1) {
         printf("\n======================================================\n");
         char nome_digitado[100];
@@ -47,9 +70,9 @@ int main() {
 
           // --- 2. BUSCA OS CAPÍTULOS DESSE MANGÁ ---
          char url_capitulos[256];
-         snprintf(url_capitulos, sizeof(url_capitulos),
-               "https://api.mangadex.org/manga/%s/feed?translatedLanguage[]=pt-br&translatedLanguage[]=en&limit=20&order[chapter]=asc",
-               manga->id);
+            snprintf(url_capitulos, sizeof(url_capitulos),
+               "https://api.mangadex.org/manga/%s/feed?translatedLanguage[]=%s&limit=20&order[chapter]=asc",
+               manga->id, lang_code);
 
           printf("\nBuscando capitulos em: %s\n", url_capitulos);
           MemoryBuffer res_caps = install_data_url(url_capitulos);
