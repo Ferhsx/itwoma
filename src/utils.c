@@ -50,7 +50,7 @@ void ler_manga(const char *caminho_pasta) {
 #else
     // --- MODO LINUX ---
     char comando[512];
-    snprintf(comando, sizeof(comando), "chafa -c full %s/*", caminho_pasta);
+    snprintf(comando, sizeof(comando), "chafa -f symbols -c full --size 1280x1280 %s/*", caminho_pasta);
     system(comando);
 #endif
 }
