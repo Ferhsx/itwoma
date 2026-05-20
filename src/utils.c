@@ -2,6 +2,7 @@
 #include <sys/stat.h> // Biblioteca do Linux
 #include <stdlib.h>
 #include "../include/utils.h"
+#include <string.h>
 
 #ifdef _WIN32
     #include <direct.h> // Biblioteca nativa do Windows para diretórios
@@ -68,4 +69,25 @@ void limpar_pasta_downloads(const char *caminho_pasta) {
 #endif
 
     system(comando);
+}
+
+void formatar_texto_url(char *texto_destino, const char *texto_origem) {
+    int i = 0, j = 0;
+    while (texto_origem[i] != '\0') {
+        // Remove a quebra de linha do ENTER
+        if (texto_origem[i] == '\n' || texto_origem[i] == '\r') {
+            i++;
+            continue;
+        }
+        // Troca ESPAÇO por %20
+        if (texto_origem[i] == ' ') {
+            texto_destino[j++] = '%';
+            texto_destino[j++] = '2';
+            texto_destino[j++] = '0';
+        } else {
+            texto_destino[j++] = texto_origem[i];
+        }
+        i++;
+    }
+    texto_destino[j] = '\0'; // Fecha a string corretamente
 }
