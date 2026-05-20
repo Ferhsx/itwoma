@@ -1,0 +1,36 @@
+name: Release Pipeline
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build-and-release:
+    name: Build Release Binaries
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies (Linux)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libcurl4-openssl-dev
+
+      - name: Compile ITWOMA
+        run: |
+          mkdir build
+          cd build
+          cmake ..
+          make
+          # Vamos renomear o arquivo final para ficar com cara de software profissional
+          mv itwoma itwoma-linux-amd64
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/itwoma-linux-amd64
+          generate_release_notes: true
