@@ -2,7 +2,7 @@
 #include "../include/manga.h"
 #include "../include/http_client.h"
 #include "../include/parser.h"
-#include "../include/utils.h" // AQUI: Corrigindo o Erro 1 (incluindo as utilidades)
+#include "../include/utils.h"
 
 int main() {
     printf("=== ITWOMA (I'm Tired Of Web Manga Ads) ===\n\n");
@@ -92,7 +92,7 @@ int main() {
                     }
 
                     // IMPORTANTE: Faxina das páginas
-                    destruct_page_list(&paginas); // Assumi que você traduziu o nome dessa função também!
+                    destruct_page_list(&paginas);
                 }
                 clear_buffer(&res_pages);
             }

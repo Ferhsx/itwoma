@@ -36,22 +36,21 @@ void ler_manga(const char *caminho_pasta) {
     printf("\nAbrindo o leitor de manga...\n");
 
 #ifdef _WIN32
+    // --- MODO WINDOWS ---
     char comando[512];
-    // explorer.exe abre a pasta nativamente no Windows
-    snprintf(comando, sizeof(comando), "explorer.exe \"%s\"", caminho_pasta);
+    snprintf(comando, sizeof(comando), "start \"\" \"%s\"", caminho_pasta);
     system(comando);
-
+    
     printf("\n[MODO WINDOWS]\n");
     printf("A pasta com as paginas foi aberta em uma nova janela.\n");
     printf(">> Pressione ENTER nesta tela preta quando terminar de ler para limpar o HD...");
-
-    // Limpa o buffer do teclado e pausa o programa esperando o Enter
+    
     fflush(stdin);
-    getchar();
+    getchar(); 
 #else
+    // --- MODO LINUX ---
     char comando[512];
-    // O comando 'start' abre pastas, URLs e arquivos nativamente no CMD do Windows de forma segura
-    snprintf(comando, sizeof(comando), "start \"\" \"%s\"", caminho_pasta);
+    snprintf(comando, sizeof(comando), "chafa -c full %s/*", caminho_pasta);
     system(comando);
 #endif
 }
