@@ -37,7 +37,6 @@ int main() {
                 printf("LENDO O CAPITULO: %s - %s\n", primeiro_cap->chapter_number, primeiro_cap->title);
                 printf("==========================================\n");
 
-                // --- 3. A PARTE QUE TINHA SUMIDO: CONECTANDO NO MANGADEX@HOME ---
                 char url_paginas[256];
                 snprintf(url_paginas, sizeof(url_paginas),
                     "https://api.mangadex.org/at-home/server/%s", primeiro_cap->id);
@@ -53,7 +52,7 @@ int main() {
                         printf("[Total de Paginas]: %d\n", paginas.page_count);
 
                         // 1. Criar a pasta de downloads do capítulo
-                        const char *pasta_downloads = "./capitulo_baixado";
+                        const char *pasta_downloads = "capitulo_baixado";
                         if (!criar_pasta(pasta_downloads)) {
                             printf("Erro fatal ao criar a pasta de downloads.\n");
                             return 1;
@@ -84,6 +83,12 @@ int main() {
                         }
 
                         printf("\n=== DOWNLOAD CONCLUIDO ===\n");
+
+                        // Chama a nossa função abstrata, que sabe se virar no Windows e no Linux
+                        ler_manga(pasta_downloads);
+                        limpar_pasta_downloads(pasta_downloads);
+
+                        printf("Leitura finalizada e HD limpo.\n");
                     }
 
                     // IMPORTANTE: Faxina das páginas
