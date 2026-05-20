@@ -4,9 +4,38 @@
 #include "../include/utils.h"
 #include <string.h>
 
+#ifndef _WIN32
+    #include <unistd.h>
+    #include <sys/select.h>
+#endif
+
 #ifdef _WIN32
     #include <direct.h> // Biblioteca nativa do Windows para diretórios
 #endif
+
+#ifndef _WIN32
+static int stdin_has_data(void) {
+    struct timeval tv = {0, 0};
+    fd_set rfds;
+    FD_ZERO(&rfds);
+    FD_SET(STDIN_FILENO, &rfds);
+    return select(STDIN_FILENO + 1, &rfds, NULL, NULL, &tv) > 0;
+}
+#endif
+
+static void esperar_enter_usuario(void) {
+    int c;
+
+#ifndef _WIN32
+    if (stdin_has_data()) {
+        while ((c = getchar()) != '\n' && c != EOF) {}
+    }
+#endif
+
+    printf(">> Pressione ENTER quando terminar de ler para limpar o HD...");
+    fflush(stdout);
+    while ((c = getchar()) != '\n' && c != EOF) {}
+}
 
 int criar_pasta(const char *caminho) {
     int status;
@@ -36,6 +65,18 @@ int criar_pasta(const char *caminho) {
 void ler_manga(const char *caminho_pasta) {
     printf("\nAbrindo o leitor de manga...\n");
 
+    struct stat st = {0};
+    if (stat(caminho_pasta, &st) != 0 ||
+#ifndef _WIN32
+        !S_ISDIR(st.st_mode)
+#else
+        !(st.st_mode & _S_IFDIR)
+#endif
+    ) {
+        printf("Erro: o caminho '%s' nao existe ou nao e um diretorio.\n", caminho_pasta);
+        return;
+    }
+
 #ifdef _WIN32
     // --- MODO WINDOWS ---
     char comando[512];
@@ -44,15 +85,23 @@ void ler_manga(const char *caminho_pasta) {
     
     printf("\n[MODO WINDOWS]\n");
     printf("A pasta com as paginas foi aberta em uma nova janela.\n");
-    printf(">> Pressione ENTER nesta tela preta quando terminar de ler para limpar o HD...");
-    
-    fflush(stdin);
-    getchar(); 
+    printf("Abra a pasta manualmente se necessario.\n");
+    esperar_enter_usuario();
 #else
     // --- MODO LINUX ---
+    if (getenv("DISPLAY") == NULL && getenv("WAYLAND_DISPLAY") == NULL) {
+        printf("Nenhum ambiente grafico detectado. Abra a pasta '%s' manualmente.\n", caminho_pasta);
+        esperar_enter_usuario();
+        return;
+    }
+
     char comando[512];
-    snprintf(comando, sizeof(comando), "chafa -f symbols -c full --size 1280x1280 %s/*", caminho_pasta);
-    system(comando);
+    snprintf(comando, sizeof(comando), "xdg-open \"%s\" >/dev/null 2>&1", caminho_pasta);
+    if (system(comando) != 0) {
+        printf("Nao foi possivel abrir o leitor automaticamente. Abra a pasta '%s' manualmente.\n", caminho_pasta);
+    }
+
+    esperar_enter_usuario();
 #endif
 }
 

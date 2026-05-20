@@ -59,7 +59,6 @@ int main() {
 
     // --- 4. BUSCA O MANGÁ ---
         MemoryBuffer res_manga = install_data_url(url_manga);
-    // ... Daqui pra baixo o seu código continua IGUALZINHO ao que já estava!
         if (res_manga.memory == NULL) return 1;
 
         Manga *manga = parse_manga_json(res_manga.memory);
@@ -81,7 +80,6 @@ int main() {
                ChapterList lista = parse_chapters_json(res_caps.memory);
 
              if (lista.count > 0) {
-                    // --- NOVO: MENU INTERATIVO DE CAPÍTULOS ---
                    printf("\n--- CAPITULOS DISPONIVEIS ---\n");
                   for (int i = 0; i < lista.count; i++) {
                      printf("[%d] Cap: %s - %s\n", i,
