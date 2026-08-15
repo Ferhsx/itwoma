@@ -28,6 +28,8 @@ typedef struct {
     char *title;
 } Manga;
 
+void destruct_chapter(Chapter *c);
+
 Chapter* creat_chapter(const char* id, const char* chapter_number, const char* title);
 void destruct_chapter_list(ChapterList* lista);
 

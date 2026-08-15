@@ -63,6 +63,15 @@ void destruct_chapter_list(ChapterList *lista) {
     }
 }
 
+void destruct_chapter(Chapter *c) {
+    if (c != NULL) {
+        free(c->id);
+        free(c->chapter_number);
+        free(c->title);
+        free(c);
+    }
+}
+
 PageList creat_pagelist(int count){
     PageList p;
     p.page_count = count;

@@ -11,6 +11,7 @@ add_executable(itwoma src/main.c
         src/parser.c
         lib/cJSON/cJSON.c
         src/utils.c
+        src/ui.c
 )
 
 target_link_libraries(itwoma PRIVATE CURL::libcurl)
