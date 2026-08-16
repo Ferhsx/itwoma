@@ -15,3 +15,17 @@ add_executable(itwoma src/main.c
 )
 
 target_link_libraries(itwoma PRIVATE CURL::libcurl)
+
+enable_testing()
+
+# 3. Executável dos Testes Unitários (Não precisa de UI nem de internet!)
+add_executable(unit_tests
+        tests/test_parser.c
+        src/manga.c
+        src/parser.c
+        src/utils.c
+        lib/cJSON/cJSON.c
+)
+
+# 4. Registra o teste no CTest
+add_test(NAME RunAllUnitTests COMMAND unit_tests)
